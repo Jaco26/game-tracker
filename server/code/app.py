@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 
-from resources.city_cards import CityCardResource
+from resources.cities import CityCardResource
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')

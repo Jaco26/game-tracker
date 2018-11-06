@@ -1,7 +1,7 @@
 from db import db
 
-class CityCards(db.Model):
-  __tablename__ = 'city_cards'
+class Cities(db.Model):
+  __tablename__ = 'cities'
 
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String)

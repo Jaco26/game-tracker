@@ -1,9 +1,16 @@
 from flask_restful import Resource
-from models.city_cards import CityCards
-from calculations.city_connections import count_connections
+from models.cities import Cities
+from calculations.count import count
+from calculations.map_city_connections import map_cities
 
-class CityCardResource(Resource):
+class CitiesResource(Resource):
   def get(self):
-    cities = [city_card.json() for city_card in CityCards.query.all()]
-    return count_connections(cities)
-
+    cities = [city.json() for city in Cities.query.all()]
+    mapped_cities = map_cities(cities)
+    # counted = count(cities)
+    # connections = get_connections(cities)
+    return { 
+      # 'counted': counted,
+      # 'connections': connections,
+      'mapped_cities': mapped_cities,
+    }

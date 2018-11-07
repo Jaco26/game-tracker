@@ -5,13 +5,25 @@ import json
 pp = lambda dct: print(json.dumps(dct, indent=2))
 child_has_content = lambda dct: type(dct) is dict and len(dct) > 0
 
-def process(city, cities, accum):
-  pp(accum)  
+def recurse(accum, cities):
+  keys = list(dict.keys(accum))
+  for k in keys:
+    if child_has_content(accum[k]):
+      next_level = accum[k]
+      recurse(next_level, cities)
+    else:
+      city = next((ct for ct in cities if ct['id'] == k))
+      accum[k] = { c_id: {} for c_id in city['connections']}  
+
+def process(cities, accum):
+  recurse(accum, cities)
+  return accum
+
 
 def map_cities(cities):
   city = cities[0]
   accum = { city['id']: {c_id: {} for c_id in city['connections'] } }
-  return process(city, cities, accum)
+  return process(cities, accum)
 
 
 class TestResource(Resource):

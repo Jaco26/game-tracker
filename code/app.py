@@ -2,13 +2,14 @@ from flask import Flask, request, jsonify
 from flask_restful import Resource, Api
 
 from resources.cities import CitiesResource
-
+from resources.playground import TestResource
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
 api = Api(app)
 
 api.add_resource(CitiesResource, '/api/citycards')
+api.add_resource(TestResource, '/api/test')
 
 @app.route('/')
 def index():

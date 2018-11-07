@@ -23,3 +23,9 @@ class Cities(db.Model):
       'color': self.color,
       'connections': self.connections
     }
+  
+  def simple_json(self):
+    return {
+      'id': self.id,
+      'connections': self.connections
+    }

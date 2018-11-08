@@ -1,16 +1,12 @@
 from flask_restful import Resource
 from models.cities import Cities
-from calculations.count import count
-from calculations.map_city_connections import map_cities
+from calculations.map_cities import map_cities
 
-class CitiesResource(Resource):
-  def get(self):
+
+class CityByName(Resource):
+  def get(self, name):
     cities = [city.json() for city in Cities.query.all()]
-    mapped_cities = map_cities(cities)
-    # counted = count(cities)
-    # connections = get_connections(cities)
-    return { 
-      # 'counted': counted,
-      # 'connections': connections,
-      'mapped_cities': mapped_cities,
-    }
+    city = next((c for c in cities if c['name'] == name), None)
+    if city:
+      return map_cities(city, cities)
+    return { 'message': 'Sorry, but the city: {} was not found'.format(name) }

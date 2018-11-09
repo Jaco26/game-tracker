@@ -1,10 +1,7 @@
-from flask_restful import Resource
 from models.cities import Cities
-import json
 
 pp = lambda dct: print(json.dumps(dct, indent=2))
 flat = lambda lst: [item for sub_l in lst for item in sub_l]
-child_has_content = lambda dct: type(dct) is dict and len(dct) > 0
 
 def item_not_in(lst_2d, item):
   for lst in lst_2d:

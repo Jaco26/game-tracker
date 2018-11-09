@@ -1,4 +1,6 @@
 from db import db
+# from calculations.map_cities import map_cities
+# from app import app
 
 class Cities(db.Model):
   __tablename__ = 'cities'
@@ -30,3 +32,11 @@ class Cities(db.Model):
       'name': self.name,
       'connections': self.connections
     }
+
+  def map_cities(self, name):
+    cities = [city.simple_json() for city in self.query.all()]
+    city = next((c for c in cities if c['name'] == name), None)
+    if city:
+      return map_cities(city, cities), 200
+    return { 'message': 'Sorry, but the city: {} was not found'.format(name) }, 404
+

@@ -9,4 +9,4 @@ class CityByName(Resource):
     city = next((c for c in cities if c['name'] == name), None)
     if city:
       return map_cities(city, cities)
-    return { 'message': 'Sorry, but the city: {} was not found'.format(name) }
+    return { 'message': 'Sorry, but the city: {} was not found'.format(name) }, 404

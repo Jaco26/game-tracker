@@ -1,22 +1,37 @@
-from flask import Flask, request, jsonify
-from flask_restful import Resource, Api
-
+import socket
+from flask import Flask
+from flask_restful import Api
+from flask_socketio import SocketIO, Namespace, emit, disconnect
 from resources.cities import CityByName
-# from resources.playground import TestResource
 
 app = Flask(__name__, instance_relative_config=True)
 app.config.from_pyfile('config.py')
 api = Api(app)
+socketio = SocketIO(app)
 
-# api.add_resource(CitiesResource, '/api/citycards')
-# api.add_resource(TestResource, '/api/test')
-api.add_resource(CityByName, '/api/city/<string:name>')
+api.add_resource(CityByName, '/city/<string:name>')
 
-@app.route('/')
-def index():
-  return '<h1>Hello</h1>'
+@socketio.on('connect')
+def connected():
+  emit('connect', { 'hello': 'welcome' })
+
+@socketio.on('userMessage')
+def recieve_message(msg):
+  print(msg)
+  if msg.lower() == 'fuck':
+    disconnect()
+
+# @app.route('/cities/<string:name>')
+# def hihi(name):
+#   from calculations.map_cities import map_cities
+#   return map_cities(name)
 
 if __name__ == '__main__':
   from db import db
   db.init_app(app)
-  app.run(host='0.0.0.0')
+  host = socket.gethostname()
+  IPAddr = socket.gethostbyname(host)
+  port = app.config['PORT']
+  print("Server is callable at http://{}:{}/".format(IPAddr, port))
+  socketio.run(app, host='0.0.0.0')
+ 

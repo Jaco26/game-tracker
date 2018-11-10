@@ -1,7 +1,7 @@
 import socket
-from flask import Flask
+from flask import Flask, request
 from flask_restful import Api
-from flask_socketio import SocketIO, Namespace, emit, disconnect
+from flask_socketio import SocketIO, Namespace, emit, join_room, rooms
 from resources.cities import CityByName
 
 app = Flask(__name__, instance_relative_config=True)
@@ -15,11 +15,17 @@ api.add_resource(CityByName, '/city/<string:name>')
 def connected():
   emit('connect', { 'hello': 'welcome' })
 
-@socketio.on('userMessage')
+@socketio.on('join')
+def on_join(data):
+  join_room(data['room'])
+  print('ROOMS', rooms())
+
+
+@socketio.on('newMessage')
 def recieve_message(msg):
-  print(msg)
-  if msg.lower() == 'fuck':
-    disconnect()
+  print('NEW MESSAGE:', msg)
+  print('SESSION ID:',request.sid)
+  emit('messageRecieved', msg, room='theRoom', include_self=False)
 
 # @app.route('/cities/<string:name>')
 # def hihi(name):
